@@ -1,0 +1,63 @@
+{
+    "compilerOptions": {
+        // compiler options
+        // target defines the JavaScript version to compile to 
+        "target": "es2024",
+        // defines how the modules are imported or exported i.e import express from 'express' is converted to const express = require ('express')
+        "module": "commonjs",
+        //  it helps us to import something from a path such as for the command import user from "./utils/user" , typescript checks the following 
+        // ./utils/user.ts , ./utils/user.tsx , ./utils/user.d.ts , ./utils/user.js , ./utils/user.jsx
+        "moduleResolution": "node",
+        // well it allows us to use the built-in libraries or functions of javascript such as Math, Date, Array, etc. example includes the filter method on arrays
+        "lib": [
+            "es2024"
+        ],
+        // build options
+        // specifies the folder where the compiled javascript files will be stored
+        "outDir": "./dist",
+        // specifies the root folder of the source typescript files
+        "rootDir": "./src",
+        // type checking options
+        // strict enables all strict type-checking options for example it makes sure that a variable that is declared to be of type string cannot be assigned a number value
+        "strict": true,
+        // strictNullChecks Forces you to handle null and undefined.
+        // let username: string | null = null;
+        // username.toUpperCase(); // ❌ Error
+        // we must handle null in this case like
+        //         if (username) {
+        //   username.toUpperCase();
+        // }
+        "strictNullChecks": true,
+        // strictFunctionTypes makes sure that function types are checked more thoroughly for example
+        // let funcA: (x: number) => void;
+        // let funcB: (x: number | string) => void;
+        // funcA = funcB; // ❌ Error
+        "strictFunctionTypes": true,
+        // import options
+        // Allows default import syntax for CommonJS modules.
+        // Example WITHOUT esModuleInterop:
+        // import express from "express"; // ❌ Error
+        // You must write:
+        // import * as express from "express";
+        // WITH esModuleInterop → ✔ works:
+        // import express from "express";
+        "esModuleInterop": true,
+        // Allows importing modules with a '.json' extension
+        // the line import something from './congig.json' will only work with this command
+        "resolveJsonModule": true,
+        // performance settings
+        // it skips the typecheck of built in libraries or built in functions that we use such as filter, reduce functions. it makes the compilstion faster.
+        "skipDefaultLibCheck": true,
+        // this throws an error when we name a file or folder in uppercase and try to import it in lower case and vice versa.
+        "forceConsistentCasingInFileNames": true,
+    },
+    // include means convert all the files and folders inside src
+    "include": [
+        "src/**/*"
+    ],
+    // convert all the files and folders except these
+    "exclude": [
+        "node_modules",
+        "dist"
+    ]
+}
