@@ -1,0 +1,88 @@
+version: "3.9"
+
+services:
+  # --------------------------------------
+  # MongoDB
+  # --------------------------------------
+  mongo:
+    image: mongo:8.0
+    container_name: mongo-db
+    restart: unless-stopped
+
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+
+    volumes:
+      - mongo-data:/data/db
+
+    ports:
+      - "27017:27017"
+
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.runCommand({ ping: 1 })"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+    networks:
+      - mern-net
+
+  # --------------------------------------
+  # Backend (Node + Express)
+  # --------------------------------------
+  backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: todo-backend
+    restart: unless-stopped
+
+    environment:
+      PORT: ${BACKEND_PORT}
+      MONGO_URI: ${MONGO_URI}
+
+    ports:
+      - "${BACKEND_PORT}:${BACKEND_PORT}"
+
+    depends_on:
+      mongo:
+        condition: service_healthy
+
+    networks:
+      - mern-net
+
+  # --------------------------------------
+  # Frontend (Next.js Production Server)
+  # --------------------------------------
+  frontend:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: todo-frontend
+    restart: unless-stopped
+
+    environment:
+      NEXT_PUBLIC_BASE_URL: ${NEXT_PUBLIC_BASE_URL}
+
+    ports:
+      - "${FRONTEND_PORT}:3000"
+
+    depends_on:
+      - backend
+
+    networks:
+      - mern-net
+
+# --------------------------------------
+# Volumes
+# --------------------------------------
+volumes:
+  mongo-data:
+
+# --------------------------------------
+# Network
+# --------------------------------------
+networks:
+  mern-net:
+    driver: bridge
