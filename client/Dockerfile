@@ -1,54 +1,48 @@
-# client/Dockerfile
-
-# Build stage
+# =============================
+# 1. Builder Stage
+# =============================
 FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# Copy package files
+# Install dependencies
 COPY package*.json ./
-
-# Install dependencies including dev dependencies for build
 RUN npm ci
 
-# Copy source code
+# Copy application code
 COPY . .
 
-# Build Next.js application
+# Build Next.js app
 RUN npm run build
 
-# Production stage
+
+# =============================
+# 2. Runner Stage (Tiny, optimized)
+# =============================
 FROM node:20-alpine
 
-# Install dumb-init for proper signal handling
+# Add dumb-init for signal handling
 RUN apk add --no-cache dumb-init
 
 WORKDIR /app
 
-# Copy package files
+# Copy ONLY required files
 COPY package*.json ./
 
-# Install production dependencies only
-RUN npm ci --only=production && \
-    npm cache clean --force
+# Install ONLY production dependencies
+RUN npm ci --omit=dev && npm cache clean --force
 
-# Copy built application from builder stage
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/next.config.ts ./
+# Copy built output
+COPY --from=builder /app/.next .next
+COPY --from=builder /app/public public
+COPY --from=builder /app/next.config.* .
 
-# Create non-root user for security and switch to it
-RUN addgroup -g 1001 -S nodejs && \
-    adduser -S nodejs -u 1001 && \
-    chown -R nodejs:nodejs /app
-
+# Create non-root user
+RUN addgroup -S nodejs && adduser -S nodejs -G nodejs
 USER nodejs
 
-# Expose port (default Next.js port)
 EXPOSE 3000
 
-# Use dumb-init to handle signals properly
-ENTRYPOINT ["/usr/bin/dumb-init", "--"]
+ENTRYPOINT ["dumb-init", "--"]
 
-# Start application
 CMD ["npm", "start"]
