@@ -47,6 +47,7 @@ export const useTodos = (): UseTodosReturn => {
     await apiResponseHandler(
       async () => {
         await todoApi.deleteTodo(id);
+        await fetchTodos();
       },
       setIsLoading,
       setError

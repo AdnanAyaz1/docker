@@ -2,23 +2,21 @@
 
 import { useState } from "react";
 import { addTodoAction } from "../services/todo.actions";
+import { useTodos } from "../hooks/useTodos";
 
 const ENTER_KEY = "Enter";
 
 export const TodoForm = () => {
   const [text, setText] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const { isLoading, addTodo } = useTodos();
 
   const handleSubmit = async () => {
     if (!text.trim()) return;
-    setIsLoading(true);
     try {
-      const result = await addTodoAction(text);
-      if (result?.success) {
-        setText("");
-      }
-    } finally {
-      setIsLoading(false);
+      const result = await addTodo(text);
+      setText("");
+    } catch (error) {
+      console.error("Error adding todo:", error);
     }
   };
 
