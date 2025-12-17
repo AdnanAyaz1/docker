@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BAsE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+export const BAsE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 export const getTodos = async () => {
   const response = await axios.get(`${BAsE_URL}/todos`);
