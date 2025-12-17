@@ -1,13 +1,14 @@
 "use client";
 
-import { useTodos } from "../hooks/useTodos";
+import { useTodoContext } from "../context/TodoContext";
 import { ErrorMessage } from "./ErrorMessage";
 import { TodoList } from "./TodoList";
 import { TodoFooter } from "./TodoFooter";
 import TodoListSkeleton from "./skeletons/todoSkeleton";
 
 const TodoListContent = () => {
-  const { todos, isLoading, error } = useTodos();
+  const { todos, isLoading, error } = useTodoContext();
+
   return (
     <>
       {error ? (

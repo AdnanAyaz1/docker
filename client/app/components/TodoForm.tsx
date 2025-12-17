@@ -1,19 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import { addTodoAction } from "../services/todo.actions";
-import { useTodos } from "../hooks/useTodos";
+import { useTodoContext } from "../context/TodoContext";
 
 const ENTER_KEY = "Enter";
 
 export const TodoForm = () => {
   const [text, setText] = useState("");
-  const { isLoading, addTodo } = useTodos();
+  const { isLoading, addTodo } = useTodoContext();
 
   const handleSubmit = async () => {
     if (!text.trim()) return;
     try {
-      const result = await addTodo(text);
+      await addTodo(text);
       setText("");
     } catch (error) {
       console.error("Error adding todo:", error);
