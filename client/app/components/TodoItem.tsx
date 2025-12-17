@@ -1,6 +1,4 @@
 "use client";
-import { useState } from "react";
-import { deleteTodoAction } from "../services/todo.actions";
 import type { Todo } from "../types/todo";
 import { useTodos } from "../hooks/useTodos";
 

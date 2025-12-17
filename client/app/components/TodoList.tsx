@@ -1,4 +1,4 @@
-import type { Todo, TodoId } from "../types/todo";
+import type { Todo } from "../types/todo";
 import { TodoItem } from "./TodoItem";
 
 interface TodoListProps {

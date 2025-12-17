@@ -36,7 +36,8 @@ export const useTodos = (): UseTodosReturn => {
     await apiResponseHandler(
       async () => {
         await todoApi.createTodo(trimmedText);
-        await fetchTodos();
+        const data = await todoApi.getTodos();
+        setTodos(data);
       },
       setIsLoading,
       setError
@@ -47,7 +48,8 @@ export const useTodos = (): UseTodosReturn => {
     await apiResponseHandler(
       async () => {
         await todoApi.deleteTodo(id);
-        await fetchTodos();
+        const data = await todoApi.getTodos();
+        setTodos(data);
       },
       setIsLoading,
       setError
