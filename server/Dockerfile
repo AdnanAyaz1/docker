@@ -16,8 +16,8 @@ RUN npm ci --only=production
 COPY --from=builder /app/dist ./dist
 
 # Create non-root user
-RUN adduser -S nodejs
-USER nodejs
+RUN adduser -S non_root_user
+USER non_root_user
 
 EXPOSE 4000
 CMD ["node", "dist/server.js"]
